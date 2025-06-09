@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Split & Merge PDFs</title>
+</head>
+<body>
+    <h1>PDF Tools</h1>
+
+    <h2>Merge PDFs</h2>
+    <form action="/merge" method="POST" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required>
+        <button type="submit">Merge</button>
+    </form>
+
+    <h2>Split PDF</h2>
+    <form action="/split" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Split</button>
+    </form>
+</body>
+</html>
