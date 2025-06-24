@@ -14,9 +14,26 @@
     </form>
 
     <h2>Split PDF</h2>
-    <form action="/split" method="POST" enctype="multipart/form-data">
+    <form action="/split" method="POST" enctype="multipart/form-data" id="splitForm">
         <input type="file" name="file" required>
+        <div id="ranges">
+            <div>
+                From page <input type="number" name="from_page[]" min="1" required>
+                to <input type="number" name="to_page[]" min="1" required>
+            </div>
+        </div>
+        <button type="button" onclick="addRange()">+ Add Range</button><br>
+        <label>
+            <input type="checkbox" name="merge_ranges" value="1"> Merge all ranges in one PDF file.
+        </label><br>
         <button type="submit">Split</button>
     </form>
+    <script>
+    function addRange() {
+        var div = document.createElement('div');
+        div.innerHTML = 'From page <input type="number" name="from_page[]" min="1" required> to <input type="number" name="to_page[]" min="1" required>';
+        document.getElementById('ranges').appendChild(div);
+    }
+    </script>
 </body>
 </html>
