@@ -1,21 +1,9 @@
-# SplitPDF Web Tool
+# Free PDF Tools – Merge & Split
 
-A Flask app to split and merge PDF files with custom ranges through a web interface.
+A Flask web app for merging and splitting PDF files by custom ranges.
 
-## Features
+- **/ :** Landing page (free tools)
+- **/merge :** Merge PDF files
+- **/split :** Split PDF by custom ranges, optionally merge result
 
-- Merge multiple PDF files into one
-- Split a PDF by custom page ranges, with option to merge ranges or get each range as a separate PDF (ZIP download)
-
-## Usage
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
-
-Deployable on Render with the included Procfile.
-
-## License
-
-MIT
+100% free, no login, no watermark. Mobile-friendly and ready for Render.

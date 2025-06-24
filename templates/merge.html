@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Merge PDFs – Free PDF Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
+        .container { max-width: 430px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        h1 { color: #2c437c; }
+        form { margin-top: 1em; }
+        input[type=file], button { margin: 0.6em 0; }
+        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn:hover { background: #a3b4dc; }
+        button:hover { background: #264da0; }
+        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Merge PDF Files</h1>
+        <p>
+            Combine multiple PDF documents into a single file, quickly and securely. 
+            Upload your PDFs in order and click "Merge"—your merged document is instantly ready to download.<br>
+            <strong>All files processed locally. Free forever.</strong>
+        </p>
+        <form action="{{ url_for('merge') }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="files" multiple required>
+            <br>
+            <button type="submit">Merge</button>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Back to Home</a>
+    </div>
+</body>
+</html>

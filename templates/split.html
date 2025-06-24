@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Split PDF – Free PDF Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
+        .container { max-width: 460px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        h1 { color: #2c437c; }
+        form { margin-top: 1em; }
+        input[type=file], button { margin: 0.6em 0; }
+        .ranges { margin-bottom: 1em;}
+        .range-row { margin-bottom: 0.5em; }
+        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn:hover { background: #a3b4dc; }
+        button:hover { background: #264da0; }
+        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Split PDF by Ranges</h1>
+        <p>
+            Extract custom page ranges from your PDF or split it into multiple files.<br>
+            Add as many ranges as you want, and choose to merge all ranges into one file or download each range as a separate PDF.<br>
+            <strong>Secure, fast, and always free.</strong>
+        </p>
+        <form action="{{ url_for('split') }}" method="POST" enctype="multipart/form-data" id="splitForm">
+            <input type="file" name="file" required>
+            <div class="ranges" id="ranges">
+                <div class="range-row">
+                    From page <input type="number" name="from_page[]" min="1" required>
+                    to <input type="number" name="to_page[]" min="1" required>
+                </div>
+            </div>
+            <button type="button" onclick="addRange()">+ Add Range</button><br>
+            <label>
+                <input type="checkbox" name="merge_ranges" value="1"> Merge all ranges in one PDF file.
+            </label><br>
+            <button type="submit">Split</button>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Back to Home</a>
+    </div>
+    <script>
+    function addRange() {
+        var div = document.createElement('div');
+        div.className = 'range-row';
+        div.innerHTML = 'From page <input type="number" name="from_page[]" min="1" required> to <input type="number" name="to_page[]" min="1" required>';
+        document.getElementById('ranges').appendChild(div);
+    }
+    </script>
+</body>
+</html>
