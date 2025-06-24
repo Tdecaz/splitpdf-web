@@ -16,29 +16,45 @@
         .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
         .back-btn:hover { background: #a3b4dc; }
         button:hover { background: #264da0; }
+        .split-tabs { display: flex; gap: 0.5em; margin-bottom: 1em; }
+        .split-tabs button { flex: 1; padding: 0.7em; border: none; border-radius: 8px 8px 0 0; font-weight: bold; background: #e4eaf8; color: #2c437c; cursor: pointer;}
+        .split-tabs .active { background: #3e6ef4; color: #fff; }
         @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Split PDF by Ranges</h1>
+        <h1>Split PDF</h1>
         <p>
-            Extract custom page ranges from your PDF or split it into multiple files.<br>
-            Add as many ranges as you want, and choose to merge all ranges into one file or download each range as a separate PDF.<br>
+            Extract custom page ranges, or specific pages, from your PDF.<br>
+            Choose <b>Range</b> to extract sets of pages, or <b>Pages</b> to pick specific pages or ranges like 1,3,5-8.<br>
             <strong>Secure, fast, and always free.</strong>
         </p>
+        <div class="split-tabs">
+          <button type="button" id="tab-range" class="active" onclick="showTab('range')">Range</button>
+          <button type="button" id="tab-pages" onclick="showTab('pages')">Pages</button>
+        </div>
         <form action="{{ url_for('split') }}" method="POST" enctype="multipart/form-data" id="splitForm">
             <input type="file" name="file" required>
-            <div class="ranges" id="ranges">
-                <div class="range-row">
-                    From page <input type="number" name="from_page[]" min="1" required>
-                    to <input type="number" name="to_page[]" min="1" required>
+            <div id="range-section">
+                <div class="ranges" id="ranges">
+                    <div class="range-row">
+                        From page <input type="number" name="from_page[]" min="1" required>
+                        to <input type="number" name="to_page[]" min="1" required>
+                    </div>
                 </div>
+                <button type="button" onclick="addRange()">+ Add Range</button><br>
             </div>
-            <button type="button" onclick="addRange()">+ Add Range</button><br>
+            <div id="pages-section" style="display:none;">
+                <label>Pages to extract:</label>
+                <input type="text" name="page_list" placeholder="example: 1,3,5-8">
+                <small>Separate single pages or ranges by comma. Example: 1,3,5-8</small>
+                <br>
+            </div>
             <label>
-                <input type="checkbox" name="merge_ranges" value="1"> Merge all ranges in one PDF file.
+                <input type="checkbox" name="merge_ranges" value="1"> Merge extracted pages/ranges into one PDF file.
             </label><br>
+            <input type="hidden" id="split_mode" name="split_mode" value="range">
             <button type="submit">Split</button>
         </form>
         <a href="{{ url_for('home') }}" class="back-btn">&larr; Back to Home</a>
@@ -49,6 +65,13 @@
         div.className = 'range-row';
         div.innerHTML = 'From page <input type="number" name="from_page[]" min="1" required> to <input type="number" name="to_page[]" min="1" required>';
         document.getElementById('ranges').appendChild(div);
+    }
+    function showTab(mode) {
+        document.getElementById('range-section').style.display = (mode === 'range') ? '' : 'none';
+        document.getElementById('pages-section').style.display = (mode === 'pages') ? '' : 'none';
+        document.getElementById('split_mode').value = mode;
+        document.getElementById('tab-range').classList.toggle('active', mode === 'range');
+        document.getElementById('tab-pages').classList.toggle('active', mode === 'pages');
     }
     </script>
 </body>
