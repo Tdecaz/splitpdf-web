@@ -2,7 +2,8 @@ import os
 import re
 import threading
 import time
-from flask import Flask, render_template, request, send_file, redirect, url_for, after_this_request
+from flask import Flask, render_template, request, send_file, redirect, url_for, after_this_request, session
+import uuid
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from zipfile import ZipFile
@@ -177,7 +178,7 @@ def compress():
 
             compressed_path = os.path.join(RESULT_FOLDER, f'compressed_{filename}')
             pdf = pikepdf.open(filepath)
-            pdf.save(compressed_path, optimize_streams=True)
+            pdf.save(compressed_path)
             pdf.close()
 
             @after_this_request
