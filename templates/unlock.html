@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Unlock PDF – PDF Pro Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
+        .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        h1 { color: #2c437c; }
+        form { margin-top: 1em; }
+        input[type=file], button { margin: 0.6em 0; }
+        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn:hover { background: #a3b4dc; }
+        button:hover { background: #264da0; }
+        .privacy-notice { margin-top:1em; color: #456; font-size:0.95em;}
+        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unlock PDF</h1>
+        <p>
+            Remove password from a protected PDF file.<br>
+            <strong>You must know the current password.</strong>
+        </p>
+        <form action="{{ url_for('unlock') }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <br>
+            <label>Password: <input type="password" name="password" required></label>
+            <br>
+            <button type="submit">Unlock PDF</button>
+            <div class="privacy-notice">
+                <b>Privacy:</b> All files are deleted instantly after processing.
+            </div>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+        {% include 'feedback_widget.html' %}
+    </div>
+</body>
+</html>

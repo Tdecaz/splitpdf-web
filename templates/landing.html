@@ -2,30 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Free PDF Tools: Merge & Split</title>
+    <title>PDF Pro Tools</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
-        .container { max-width: 480px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
         h1 { color: #2c437c; }
-        p { color: #234; }
         .tools { margin-top: 2em; display: flex; flex-direction: column; gap: 1em;}
         .tool-link { display: block; background: #3e6ef4; color: #fff; text-align: center; text-decoration: none; font-weight: bold; border-radius: 12px; padding: 1em; transition: background 0.2s;}
         .tool-link:hover { background: #264da0; }
+        .privacy-notice { margin-top:2em; color: #456; font-size:0.9em;}
         @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Free PDF Tools!</h1>
+        <h1>PDF Pro Tools</h1>
         <p>
-            This is your one-stop, completely <strong>free</strong> solution for merging and splitting PDF files.
-            No logins, no hidden fees, no watermarks—just fast, secure, and easy PDF processing in your browser.<br>
-            Choose a tool below:
+            All-in-one free PDF toolkit: merge, split, compress, convert, edit, protect, unlock, and more. No login. No watermark.<br>
+            <strong>All files deleted instantly after processing.</strong>
         </p>
         <div class="tools">
             <a class="tool-link" href="{{ url_for('merge') }}">Merge PDF Files</a>
-            <a class="tool-link" href="{{ url_for('split') }}">Split PDF by Range or Pages</a>
+            <a class="tool-link" href="{{ url_for('split') }}">Split PDF</a>
+            <a class="tool-link" href="{{ url_for('compress') }}">Compress PDF</a>
+            <a class="tool-link" href="{{ url_for('convert') }}">Convert to PDF</a>
+            <a class="tool-link" href="{{ url_for('txt2pdf') }}">TXT to PDF</a>
+            <a class="tool-link" href="{{ url_for('edit_pages') }}">Edit Pages (Reorder/Rotate/Delete)</a>
+            <a class="tool-link" href="{{ url_for('protect') }}">Protect PDF</a>
+            <a class="tool-link" href="{{ url_for('unlock') }}">Unlock PDF</a>
+        </div>
+        <div class="privacy-notice">
+            <b>Privacy:</b> All files are deleted instantly after processing. Nothing is stored.
+        </div>
+        <div class="feedback-widget" style="margin-top:2em; padding:1em; background:#e4eaf8; border-radius:12px;">
+            <strong>Feedback:</strong> What other PDF features do you need?
+            <form action="{{ url_for('feedback') }}" method="POST" style="margin-top:0.5em;">
+                <textarea name="feature" placeholder="Your suggestion..." required style="width:100%; min-height:40px;"></textarea><br>
+                <input type="email" name="email" placeholder="Your email (optional)" style="margin-top:0.5em; width:100%;"><br>
+                <button type="submit" style="margin-top:0.5em;">Send Feedback</button>
+            </form>
         </div>
     </div>
 </body>

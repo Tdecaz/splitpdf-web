@@ -2,35 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Merge PDFs – Free PDF Tools</title>
+    <title>Merge PDFs – PDF Pro Tools</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
-        .container { max-width: 430px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
         h1 { color: #2c437c; }
-        form { margin-top: 1em; }
-        input[type=file], button { margin: 0.6em 0; }
-        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
-        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none; padding: 0.6em 1.2em; border-radius: 8px;}
         .back-btn:hover { background: #a3b4dc; }
-        button:hover { background: #264da0; }
-        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+        #fileList { list-style: none; padding-left: 0; margin-bottom: 1em; }
+        #fileList li { padding: 8px; background: #e4eaf8; border-radius: 6px; margin-bottom: 4px; cursor: move; display:flex; justify-content:space-between; align-items:center;}
+        #fileList li.dragging { opacity: 0.5; }
+        .removeBtn { margin-left: 10px; color: #fff; background: #e34b4b; border: none; border-radius: 5px; padding: 2px 10px; cursor:pointer;}
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Merge PDF Files</h1>
-        <p>
-            Combine multiple PDF documents into a single file, quickly and securely. 
-            Upload your PDFs in order and click "Merge"—your merged document is instantly ready to download.<br>
-            <strong>All files processed locally. Free forever.</strong>
-        </p>
-        <form action="{{ url_for('merge') }}" method="POST" enctype="multipart/form-data">
-            <input type="file" name="files" multiple required>
-            <br>
+        <form id="mergeForm" action="{{ url_for('merge') }}" method="POST" enctype="multipart/form-data">
+            <div id="dropArea" style="border:2px dashed #3e6ef4; border-radius:12px; padding:1.5em; margin-bottom:1em; text-align:center;">
+                Drag & drop PDFs here or click to select.
+                <input type="file" id="mergeFiles" name="files" multiple required accept="application/pdf" style="display:none;">
+                <ul id="fileList"></ul>
+            </div>
             <button type="submit">Merge</button>
+            <div class="privacy-notice" style="margin-top:1em; color:#456; font-size:0.95em;">
+                <b>Privacy:</b> All files are deleted instantly after processing.
+            </div>
         </form>
-        <a href="{{ url_for('home') }}" class="back-btn">&larr; Back to Home</a>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+        {% include 'feedback_widget.html' %}
     </div>
+    <script>
+    let fileInput = document.getElementById('mergeFiles');
+    let dropArea = document.getElementById('dropArea');
+    let fileList = document.getElementById('fileList');
+    let filesArray = [];
+
+    dropArea.onclick = () => fileInput.click();
+    dropArea.ondragover = e => { e.preventDefault(); dropArea.style.background="#e4eaf8"; }
+    dropArea.ondragleave = e => { e.preventDefault(); dropArea.style.background=""; }
+    dropArea.ondrop = e => {
+        e.preventDefault();
+        dropArea.style.background="";
+        filesArray = Array.from(e.dataTransfer.files);
+        renderList();
+    };
+    fileInput.onchange = () => {
+        filesArray = Array.from(fileInput.files);
+        renderList();
+    };
+    function renderList() {
+        fileList.innerHTML = "";
+        filesArray.forEach((file, idx) => {
+            let li = document.createElement('li');
+            li.textContent = file.name;
+            li.draggable = true;
+            li.ondragstart = (e) => { e.dataTransfer.setData("text/plain", idx); };
+            li.ondragover = (e) => { e.preventDefault(); };
+            li.ondrop = (e) => {
+                e.preventDefault();
+                let fromIdx = e.dataTransfer.getData("text/plain");
+                let toIdx = idx;
+                let temp = filesArray[fromIdx];
+                filesArray.splice(fromIdx, 1);
+                filesArray.splice(toIdx, 0, temp);
+                renderList();
+            };
+            let removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.className = "removeBtn";
+            removeBtn.onclick = (event) => { event.stopPropagation(); filesArray.splice(idx, 1); renderList(); };
+            li.appendChild(removeBtn);
+            fileList.appendChild(li);
+        });
+    }
+    document.getElementById('mergeForm').onsubmit = function(e){
+        e.preventDefault();
+        let formData = new FormData();
+        filesArray.forEach(file => formData.append('files', file));
+        fetch(this.action, {method:'POST', body:formData})
+            .then(r => r.blob())
+            .then(blob => {
+                let a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = "merged.pdf";
+                a.click();
+            });
+    };
+    </script>
 </body>
 </html>

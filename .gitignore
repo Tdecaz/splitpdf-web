@@ -3,3 +3,4 @@ uploads/
 results/
 *.pyc
 .env
+feedback.txt

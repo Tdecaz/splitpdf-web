@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TXT to PDF – PDF Pro Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
+        .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        h1 { color: #2c437c; }
+        form { margin-top: 1em; }
+        textarea { width: 100%; min-height: 100px; margin-bottom: 1em; font-size: 1em; }
+        input[type=file], button { margin: 0.6em 0; }
+        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn:hover { background: #a3b4dc; }
+        button:hover { background: #264da0; }
+        .privacy-notice { margin-top:1em; color: #456; font-size:0.95em;}
+        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TXT to PDF</h1>
+        <p>
+            Upload a .txt file or paste text below. Convert instantly to PDF.
+        </p>
+        <form action="{{ url_for('txt2pdf') }}" method="POST" enctype="multipart/form-data">
+            <label>Paste text:</label>
+            <textarea name="text" placeholder="Paste your text here..."></textarea>
+            <br>
+            <label>OR upload .txt file:</label>
+            <input type="file" name="file" accept=".txt">
+            <br>
+            <button type="submit">Convert to PDF</button>
+            <div class="privacy-notice">
+                <b>Privacy:</b> All files are deleted instantly after processing.
+            </div>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+        {% include 'feedback_widget.html' %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Pages (Reorder/Rotate/Delete) – PDF Pro Tools</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; background: #f7f8fa; }
+        .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+        h1 { color: #2c437c; }
+        .pages-list { list-style: none; padding-left: 0; }
+        .pages-list li { display: flex; align-items: center; background: #e4eaf8; border-radius: 6px; margin-bottom: 4px; padding: 8px;}
+        .drag-handle { cursor: move; margin-right: 12px; }
+        .removeBtn { margin-left: 8px; color: #fff; background: #e34b4b; border: none; border-radius: 5px; padding: 2px 10px; cursor:pointer;}
+        select { margin-left: 8px; }
+        button, .back-btn { padding: 0.7em 1.4em; border-radius: 10px; border: none; font-weight: bold; background: #3e6ef4; color: #fff; cursor: pointer; }
+        .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none;}
+        .back-btn:hover { background: #a3b4dc; }
+        button:hover { background: #264da0; }
+        .privacy-notice { margin-top:1em; color: #456; font-size:0.95em;}
+        @media (max-width: 500px) { .container { padding: 1em; margin: 1em; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit PDF Pages</h1>
+        <form id="editPagesForm" action="{{ url_for('edit_pages') }}" method="POST" enctype="multipart/form-data">
+            <label>Select PDF:</label>
+            <input type="file" id="pdfFile" name="file" accept="application/pdf" required>
+            <div id="pagesContainer" style="margin-top:1em; display:none;">
+                <label>Pages:</label>
+                <ul class="pages-list" id="pagesList">
+                    <!-- Will be filled with JS -->
+                </ul>
+            </div>
+            <button type="submit">Apply Changes &amp; Download</button>
+            <div class="privacy-notice">
+                <b>Privacy:</b> All files are deleted instantly after processing.
+            </div>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+        {% include 'feedback_widget.html' %}
+    </div>
+    <script>
+    // NOTE: This is a client-side simulation (shows page numbers; real page handling is backend)
+    let pages = [];
+    document.getElementById('pdfFile').addEventListener('change', function(e) {
+        // Just a simulation: pretend all PDFs are 5 pages for demo purposes
+        // For real preview, use a PDF.js viewer or send file to backend to get page count
+        if (this.files.length > 0) {
+            pages = [];
+            let n = 8; // Example: 8 pages; you can send to backend for real count
+            for (let i = 1; i <= n; i++) {
+                pages.push({num: i, rotation: 0, keep: true});
+            }
+            renderPages();
+            document.getElementById('pagesContainer').style.display = '';
+        }
+    });
+    function renderPages() {
+        let list = document.getElementById('pagesList');
+        list.innerHTML = "";
+        pages.forEach((page, idx) => {
+            let li = document.createElement('li');
+            let drag = document.createElement('span');
+            drag.textContent = "☰";
+            drag.className = "drag-handle";
+            li.appendChild(drag);
+
+            let label = document.createElement('span');
+            label.textContent = "Page " + page.num;
+            li.appendChild(label);
+
+            let rotate = document.createElement('select');
+            [0,90,180,270].forEach(a => {
+                let opt = document.createElement('option');
+                opt.value = a;
+                opt.textContent = "Rotate " + a + "°";
+                if (a === page.rotation) opt.selected = true;
+                rotate.appendChild(opt);
+            });
+            rotate.onchange = () => page.rotation = parseInt(rotate.value);
+            li.appendChild(rotate);
+
+            let keep = document.createElement('input');
+            keep.type = "checkbox";
+            keep.checked = page.keep;
+            keep.title = "Keep this page";
+            keep.onchange = () => page.keep = keep.checked;
+            li.appendChild(keep);
+
+            let removeBtn = document.createElement('button');
+            removeBtn.textContent = '×';
+            removeBtn.className = "removeBtn";
+            removeBtn.onclick = (event) => { event.preventDefault(); pages.splice(idx, 1); renderPages(); };
+            li.appendChild(removeBtn);
+
+            li.draggable = true;
+            li.ondragstart = (e) => { e.dataTransfer.setData("text/plain", idx); };
+            li.ondragover = (e) => { e.preventDefault(); };
+            li.ondrop = (e) => {
+                e.preventDefault();
+                let fromIdx = parseInt(e.dataTransfer.getData("text/plain"));
+                let toIdx = idx;
+                let temp = pages[fromIdx];
+                pages.splice(fromIdx, 1);
+                pages.splice(toIdx, 0, temp);
+                renderPages();
+            };
+            list.appendChild(li);
+        });
+    }
+    document.getElementById('editPagesForm').onsubmit = function(e){
+        // TODO: Serialize new order, rotations, and keep array
+        // and send to backend. Here we just alert for demo.
+        // For full implementation, use hidden fields or AJAX.
+        // e.preventDefault();
+        // alert(JSON.stringify(pages));
+    };
+    </script>
+</body>
+</html>

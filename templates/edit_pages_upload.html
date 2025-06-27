@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit PDF Pages – Step 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { font-family: system-ui, sans-serif; background: #f7f8fa; }
+      .container { max-width: 500px; margin: 3em auto; padding: 2em; background: #fff; border-radius: 18px; box-shadow: 0 4px 20px #0001;}
+      h1 { color: #2c437c; }
+      .back-btn { display: inline-block; margin-top: 1em; background: #b6c7ed; color: #1d2c56; text-decoration: none; padding: 0.6em 1.2em; border-radius: 8px;}
+      .back-btn:hover { background: #a3b4dc; }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Edit PDF Pages</h1>
+    <p>Select a PDF file to start editing its pages (reorder, rotate, delete).</p>
+    <form action="{{ url_for('edit_pages') }}" method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" accept="application/pdf" required>
+      <button type="submit">Next &rarr;</button>
+    </form>
+    <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+  </div>
+</body>
+</html>

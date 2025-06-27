@@ -1,0 +1,8 @@
+<div class="feedback-widget" style="margin-top:2em; padding:1em; background:#e4eaf8; border-radius:12px;">
+  <strong>Feedback:</strong> What other PDF features do you need?
+  <form action="{{ url_for('feedback') }}" method="POST" style="margin-top:0.5em;">
+    <textarea name="feature" placeholder="Your suggestion..." required style="width:100%; min-height:40px;"></textarea><br>
+    <input type="email" name="email" placeholder="Your email (optional)" style="margin-top:0.5em; width:100%;"><br>
+    <button type="submit" style="margin-top:0.5em;">Send Feedback</button>
+  </form>
+</div>
