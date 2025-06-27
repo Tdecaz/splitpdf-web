@@ -77,7 +77,8 @@
         document.getElementById('tab-range').classList.toggle('active', mode === 'range');
         document.getElementById('tab-pages').classList.toggle('active', mode === 'pages');
     }
-    // Ensure correct tab on reload (optional: can add if using server-side tab remembering)
+    // Set default tab on page load
+    showTab('range');
     </script>
 </body>
 </html>
