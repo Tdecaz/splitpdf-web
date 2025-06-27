@@ -49,3 +49,35 @@
                 <label>Pages to extract:</label>
                 <input type="text" name="page_list" placeholder="example: 1,3,5-8">
                 <small>Separate single pages or ranges by comma. Example: 1,3,5-8</small>
+                <br>
+            </div>
+            <label>
+                <input type="checkbox" name="merge_ranges" value="1"> Merge extracted pages/ranges into one PDF file.
+            </label><br>
+            <input type="hidden" id="split_mode" name="split_mode" value="range">
+            <button type="submit">Split</button>
+            <div class="privacy-notice">
+                <b>Privacy:</b> All files are deleted instantly after processing.
+            </div>
+        </form>
+        <a href="{{ url_for('home') }}" class="back-btn">&larr; Home</a>
+        {% include 'feedback_widget.html' %}
+    </div>
+    <script>
+    function addRange() {
+        var div = document.createElement('div');
+        div.className = 'range-row';
+        div.innerHTML = 'From page <input type="number" name="from_page[]" min="1" required> to <input type="number" name="to_page[]" min="1" required>';
+        document.getElementById('ranges').appendChild(div);
+    }
+    function showTab(mode) {
+        document.getElementById('range-section').style.display = (mode === 'range') ? '' : 'none';
+        document.getElementById('pages-section').style.display = (mode === 'pages') ? '' : 'none';
+        document.getElementById('split_mode').value = mode;
+        document.getElementById('tab-range').classList.toggle('active', mode === 'range');
+        document.getElementById('tab-pages').classList.toggle('active', mode === 'pages');
+    }
+    // Ensure correct tab on reload (optional: can add if using server-side tab remembering)
+    </script>
+</body>
+</html>
