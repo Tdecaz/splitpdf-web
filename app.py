@@ -11,6 +11,19 @@ import pikepdf
 from PIL import Image
 import img2pdf
 from fpdf import FPDF
+import subprocess
+
+def libreoffice_convert(docx_path, pdf_path):
+    outdir = os.path.dirname(pdf_path)
+    cmd = [
+        "libreoffice",
+        "--headless",
+        "--convert-to", "pdf",
+        "--outdir", outdir,
+        docx_path
+    ]
+    subprocess.run(cmd, check=True)
+
 
 try:
     from docx2pdf import convert as docx2pdf_convert
@@ -209,13 +222,13 @@ def convert():
         ext = filename.rsplit('.', 1)[-1].lower()
         output_path = os.path.join(RESULT_FOLDER, f'converted.pdf')
 
-        # Word to PDF
-        if ext == 'docx' and DOCX2PDF_AVAILABLE:
+        # Use LibreOffice for DOCX -> PDF (remove all docx2pdf code)
+        if ext == 'docx':
             try:
-                docx2pdf_convert(filepath, output_path)
+                libreoffice_convert(filepath, output_path)
             except Exception as e:
                 return f'Word to PDF conversion failed: {str(e)}'
-        # Image to PDF (JPG, PNG, etc.)
+        # Image to PDF
         elif ext in ['jpg', 'jpeg', 'png', 'bmp', 'tiff']:
             try:
                 im = Image.open(filepath)
@@ -237,6 +250,7 @@ def convert():
 
         return send_file(output_path, as_attachment=True)
     return render_template('convert.html')
+
 
 # --- TXT to PDF ---
 @app.route('/txt2pdf', methods=['GET', 'POST'])
