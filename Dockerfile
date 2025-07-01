@@ -6,19 +6,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install LibreOffice, MS Core Fonts, and other dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        libreoffice \
+         libreoffice \
         ttf-mscorefonts-installer \
         fontconfig \
         fonts-liberation \
         fonts-dejavu \
-        fonts-freefont-ttf \
-        fonts-noto \
-        fonts-roboto \
-        fonts-ubuntu \
-        fonts-droid-fallback \
         fonts-crosextra-carlito \
         fonts-crosextra-caladea \
-        fonts-noto-color-emoji \
         python3-pip \
         build-essential \
         gcc \
