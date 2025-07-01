@@ -20,10 +20,10 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy app source code
+# Copy all app source code
 COPY . .
 
-# Expose port 5000
+# Expose port 5000 (the Flask default)
 EXPOSE 5000
 
 # Start with gunicorn for production

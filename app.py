@@ -220,9 +220,11 @@ def convert():
         file.save(filepath)
 
         ext = filename.rsplit('.', 1)[-1].lower()
-        output_path = os.path.join(RESULT_FOLDER, f'converted.pdf')
+        # Calculate the correct output filename (matches input docx base name)
+        basename = os.path.splitext(filename)[0]
+        output_path = os.path.join(RESULT_FOLDER, f"{basename}.pdf")
 
-        # Use LibreOffice for DOCX -> PDF (remove all docx2pdf code)
+        # Use LibreOffice for DOCX -> PDF
         if ext == 'docx':
             try:
                 libreoffice_convert(filepath, output_path)
@@ -250,6 +252,7 @@ def convert():
 
         return send_file(output_path, as_attachment=True)
     return render_template('convert.html')
+
 
 
 # --- TXT to PDF ---
