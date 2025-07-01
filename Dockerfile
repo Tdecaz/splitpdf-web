@@ -1,37 +1,47 @@
 FROM python:3.11-slim
 
-# Set non-interactive to prevent TTF install prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install LibreOffice, MS Core Fonts, and other dependencies
+# Install LibreOffice and try to install all useful font packages
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-         libreoffice \
+    for pkg in \
+        libreoffice \
+        ttf-mscorefonts-installer \
         fontconfig \
         fonts-liberation \
         fonts-dejavu \
-        python3-pip \
-        build-essential \
-        gcc \
-        libglib2.0-0 \
-        libsm6 \
-        libxext6 \
-        libxrender-dev \
-    && fc-cache -f -v \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        fonts-freefont-ttf \
+        fonts-noto \
+        fonts-noto-color-emoji \
+        fonts-crosextra-carlito \
+        fonts-crosextra-caladea \
+        fonts-roboto \
+        fonts-ubuntu \
+        fonts-droid-fallback \
+    ; do \
+        if apt-get install -y --no-install-recommends $pkg; then \
+            echo "Installed $pkg"; \
+        else \
+            echo "Could not install $pkg (skipping)"; \
+        fi; \
+    done && \
+    fc-cache -f -v && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy and install Python dependencies
+# Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy all app source code
+# Copy the rest of your app
 COPY . .
 
-# Expose port 5000
+# (Optional) List all installed fonts in the build log
+RUN fc-list
+
+# Expose the Flask/gunicorn port
 EXPOSE 5000
 
-# Start with gunicorn for production
+# Production entrypoint
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
