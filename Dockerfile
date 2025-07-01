@@ -7,12 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
          libreoffice \
-        ttf-mscorefonts-installer \
         fontconfig \
         fonts-liberation \
         fonts-dejavu \
-        fonts-crosextra-carlito \
-        fonts-crosextra-caladea \
         python3-pip \
         build-essential \
         gcc \
